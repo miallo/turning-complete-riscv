@@ -24,11 +24,7 @@ impl Console {
         self.column = 0;
 
         if self.row == ROWS {
-            let mut j = 0;
-            for i in COLUMNS..END {
-                self.con[j] = self.con[i];
-                j += 1;
-            }
+            self.con.rotate_left(COLUMNS); // Shift rows up
             for i in END - COLUMNS..END {
                 self.con[i] = 0;
             }
