@@ -25,9 +25,7 @@ impl Console {
 
         if self.row == ROWS {
             self.con.rotate_left(COLUMNS); // Shift rows up
-            for i in END - COLUMNS..END {
-                self.con[i] = 0;
-            }
+            self.con[END-COLUMNS..END].fill(0); // clear last line
             self.row = ROWS - 1;
         }
     }
