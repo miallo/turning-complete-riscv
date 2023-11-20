@@ -69,7 +69,6 @@ impl core::fmt::Write for Console {
 
                 if self.column == COLUMNS {
                     self.next_line();
-                    self.column = 0;
                 }
             },
         }
