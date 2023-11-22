@@ -1,7 +1,7 @@
 /*
 Use image_to_argb32.py to export an image into res/image.rgb
 */
-use crate::peripherals::{Peripherals, DSP as Display};
+use crate::peripherals::Display;
 use crate::utils::input_line;
 use crate::keyboard::Keyboard;
 use crate::console::Console;
@@ -19,16 +19,12 @@ const SPRITES_WIDTH: usize = 7 * 7;
 const DARK_PIECE_COLOR: u32 = 0xffffff;
 const LIGHT_PIECE_COLOR: u32 = 0x000000;
 
-pub fn run(io: Peripherals) {
-    let mut keyboard = Keyboard::new(io.kbd);
-    let mut console = Console::new(io.con);
-    let mut display = io.dsp;
-
+pub fn run(keyboard: &mut Keyboard, console: &mut Console, display: &mut Display) {
     let mut board = Board::default();
 
     for i in 0..64 {
         let square = unsafe { Square::new(i) };
-        draw_square(&mut display, &board, square, false);
+        draw_square(display, &board, square, false);
     }
     display.flush();
 
@@ -37,7 +33,7 @@ pub fn run(io: Peripherals) {
     while board.status() == BoardStatus::Ongoing {
         write!(console, "{:?} to play: ", board.side_to_move()).unwrap();
         let mut buf = ArrayString::<32>::new();
-        input_line(&mut console, &mut keyboard, &mut buf);
+        input_line(console, keyboard, &mut buf);
 
         match ChessMove::from_san(&board, &buf) {
             Ok(chess_move) => {
@@ -45,12 +41,12 @@ pub fn run(io: Peripherals) {
                     board = board.make_move_new(chess_move);
 
                     for square in &highlighted_squares {
-                        draw_square(&mut display, &board, *square, false);
+                        draw_square(display, &board, *square, false);
                     }
                     highlighted_squares.clear();
 
-                    draw_square(&mut display, &board, chess_move.get_source(), true);
-                    draw_square(&mut display, &board, chess_move.get_dest(), true);
+                    draw_square(display, &board, chess_move.get_source(), true);
+                    draw_square(display, &board, chess_move.get_dest(), true);
                     highlighted_squares.push(chess_move.get_source());
                     highlighted_squares.push(chess_move.get_dest());
                     display.flush();

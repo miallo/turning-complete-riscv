@@ -80,6 +80,7 @@ impl TIM {
 
 // 96x64 Display
 pub struct Display {
+    dsp: DSP,
     pixels: [u32; 96*64],
     flush: u32,
 }
@@ -100,7 +101,31 @@ impl DSP {
     }
 }
 
-pub static mut DEVICE_PERIPHERALS: bool = false;
+impl Display {
+    pub fn new(dsp: DSP) -> Self {
+        Self {
+            dsp,
+            pixels: [0; 96*64],
+            flush: 0
+        }
+    }
+
+    pub fn write_pixel(&mut self, offset: usize, rgb: u32) {
+        self.dsp.write_pixel(offset, rgb)
+    }
+
+    pub fn clear(&mut self) {
+        for i in 0..self.pixels.len(){
+            self.dsp.write_pixel(i, 0)
+        }
+    }
+
+    pub fn flush(&mut self) {
+        self.dsp.flush();
+    }
+}
+
+static mut DEVICE_PERIPHERALS: bool = false;
 
 pub struct Peripherals {
     pub con: CON,

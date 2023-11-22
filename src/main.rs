@@ -3,28 +3,28 @@
 
 // use arrayvec::ArrayString;
 
-mod init;
-mod peripherals;
-mod keyboard;
 mod console;
-mod utils;
 mod examples;
+mod init;
+mod keyboard;
+mod peripherals;
+mod utils;
+
+use arrayvec::ArrayString;
 
 #[export_name = "main"]
 fn main() -> ! {
-    let mut io = peripherals::Peripherals::take().unwrap();
+    let io = peripherals::Peripherals::take().unwrap();
+    let mut console = console::Console::new(io.con);
+    let mut keyboard = keyboard::Keyboard::new(io.kbd);
+    let mut display = peripherals::Display::new(io.dsp);
 
-    // examples::image::run(&mut io);
-    examples::chess::run(io);
-
-    // let mut console = console::Console::new(io.con);
-    // let mut keyboard = keyboard::Keyboard::new(io.kbd);
-
+    // examples::image::run(&mut display);
+    examples::chess::run(&mut keyboard, &mut console, &mut display);
     // let mut buf = ArrayString::<80>::new();
     // loop {
     //     utils::input_line(&mut console, &mut keyboard, &mut buf);
     //     buf.clear();
     // }
-
     loop {}
 }
