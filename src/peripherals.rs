@@ -114,7 +114,7 @@ impl Peripherals {
         if unsafe { DEVICE_PERIPHERALS } { None } else { Some(unsafe { Peripherals::steal() }) }
     }
 
-    pub unsafe fn steal() -> Self {
+    unsafe fn steal() -> Self {
         DEVICE_PERIPHERALS = true;
 
         Peripherals {
