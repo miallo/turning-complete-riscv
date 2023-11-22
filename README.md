@@ -11,6 +11,10 @@ Base off:
 
 ## Usage
 
+In the parent directory clone the following repo:
+```sh
+git clone --branch nostd git@github.com:BenjaminSchaaf/chess.git
+```
 Simply compile with `cargo build --release`. You can then import the built
 executable `target/riscv32i-unknown-none-elf/release/turning-complete-riscv`
 into Turing Complete and press run!
