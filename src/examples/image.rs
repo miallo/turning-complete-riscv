@@ -12,6 +12,6 @@ pub fn run(dsp: &mut peripherals::Display) {
         dsp.write_pixel(i, u32::from_le_bytes(bytes));
         buf = &buf[4..];
     }
-    peripherals::ebreak();
+    // peripherals::ebreak();
     dsp.flush();
 }
